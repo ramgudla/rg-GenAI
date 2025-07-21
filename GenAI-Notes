@@ -263,15 +263,6 @@ https://ruslanmv.com/blog/ArXiv-Research-with-Artificial-Intelligence
 Nice Quote:
 Agents are tools meant to assist, and the role of human engineers will continue to evolve as AI takes on more responsibilities.
 
-OPENAI:
-rg-openai-key: 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
-
-huggingface login:
-https://huggingface.co/settings/tokens
-ramgudla8/ramkygudla@gmail.com/Changeit!23
-  huggingface-cli login
-  <Enter token>:
-
 multi-agent:
 `chat_model.bind_tools([tools]).invoke(messages)` will only make the LLM call with tool parameters bound, and return the raw AIMessage with tool_calls set (i.e. the parameters that a tool should be called with) if the model decided to call any of the tools (example doc: https://python.langchain.com/docs/how_to/tool_calling/#tool-calls )
 
