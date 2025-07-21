@@ -1,5 +1,5 @@
-compartment_id = "ocid1.compartment.oc1..aaaaaaaaytnsu3rlusosd5qddb27uedggo3xlgr33cmq7kmjizmwdpzhgpya"
-auth_profile = "oiccustomersuccess"
+compartment_id = "ocid1.compartment.oc1..xxxx"
+auth_profile = "xxx"
 service_endpoint = "https://inference.generativeai.us-chicago-1.oci.oraclecloud.com"
 embeddings_model_id = "cohere.embed-english-v3.0"
 llm_model_id = "cohere.command-r-08-2024"
