@@ -1,5 +1,3 @@
-import sys
-import os
 from langchain.memory import ConversationBufferMemory
 from langchain_community.chat_message_histories import StreamlitChatMessageHistory
 from langchain.chains import LLMChain
@@ -9,18 +7,15 @@ from langchain_community.chat_models.oci_generative_ai import ChatOCIGenAI
 #In this demo we will explore using Streamlit session to store chat messages
 
 #Step 1 - setup OCI Generative AI llm
-
-current_dir = os.path.dirname(__file__)
-parent_dir = os.path.join(current_dir, '..')
-sys.path.append(parent_dir)
-
-from util.genai_wrapper import GenAIWrapper
-
-## Get the OCI LLM and Embedding models
-genai_wrapper = GenAIWrapper()
-
-llm = genai_wrapper.llm
-embeddings = genai_wrapper.embeddings
+from langchain_community.chat_models.oci_generative_ai import ChatOCIGenAI
+llm = ChatOCIGenAI(
+            model_id="cohere.command-r-08-2024",
+            service_endpoint="https://inference.generativeai.us-chicago-1.oci.oraclecloud.com",
+            compartment_id="ocid1.compartment.oc1..xxxx",
+            auth_type="API_KEY",
+            auth_profile="xxxx",
+            model_kwargs={"temperature": 0, "top_p": 0.75, "max_tokens": 512}
+        )
 
 #Step 2 - here we create a history with a key "chat_messages.
 
@@ -42,7 +37,7 @@ prompt = PromptTemplate(input_variables=["human_input"], template=template)
 
 #Step 5 - here we create a chain object
 
-llm_chain = LLMChain(llm=genai_wrapper.llm, prompt=prompt, memory=memory)
+llm_chain = LLMChain(llm=llm, prompt=prompt, memory=memory)
 
 #Step 6 - here we use streamlit to print all messages in the memory, create text imput, run chain and
 #the question and response is automatically put in the StreamlitChatMessageHistory
