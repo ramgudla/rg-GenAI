@@ -260,7 +260,7 @@ https://www.udemy.com/course/mathematics-behind-large-language-models-and-transf
 https://ruslanmv.com/blog/AI-Medical-Chatbot
 https://ruslanmv.com/blog/ArXiv-Research-with-Artificial-Intelligence
 
-Nice Quote:
+Quote:
 Agents are tools meant to assist, and the role of human engineers will continue to evolve as AI takes on more responsibilities.
 
 multi-agent:
@@ -272,6 +272,9 @@ https://medium.com/@vipra_singh/ai-agents-build-an-agent-from-scratch-part-2-7ae
 https://medium.com/@anuragmishra_27746/hands-on-build-agentic-workflow-using-langgraph-key-learnings-from-langchain-academy-part-1-9ad96d6c9210
 https://medium.com/@anuragmishra_27746/building-multi-agents-supervisor-system-from-scratch-with-langgraph-langsmith-b602e8c2c95d
   https://github.com/anurag-mishra899/Multi-Agents-Appointment-Booking
+
+Local Inference with Meta’s Latest Llama 3.2 LLMs Using Ollama, LangChain, and Streamlit:
+https://garystafford.medium.com/interacting-with-metas-latest-llama-3-2-models-using-ollama-langchain-and-streamlit-71f898b184d4
 
 python:
 https://pythonforthelab.com/blog/complete-guide-to-imports-in-python-absolute-relative-and-more/ (imports in python)
