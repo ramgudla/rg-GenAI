@@ -1,0 +1,162 @@
+oke tcpdump:
+  sudo tcpdump -n -i ens3 -A -s 0 -w /tmp/agen1.pcap 'host jcsdev.oracloud.caesars.com and (tcp port 80 or tcp port 443)' &
+  sudo tcpdump -n -i ens3 -A -s 0 -w /tmp/agen1.pcap host 10.x.x.x &
+  sudo tcpdump -ttttnnr /tmp/agen1.pcap
+
+https://gist.github.com/r0mdau/93ec268ad1ffeeaf99d80eba9e9ea84d
+https://github.com/pgillich/kubeadm-vagrant/blob/master/Ubuntu/capture_pod.sh
+  # find the kube node of the running pod, appear next to hostIP, and note containerID hash
+  kubectl get pod mypod -o json
+  # -> save hostIP
+  # -> save containerID
+  
+  # connect to the node and find the pods unique network interface index inside it's container
+  docker exec containerID /bin/bash -c 'cat /sys/class/net/eth0/iflink'
+  # -> returns index
+  
+  # locate the interface of the node
+  ip link |grep ^index:
+  # -> returns interface
+  
+  # then GO tcpdump !
+  sudo tcpdump -i interface
+
+  e.g.,
+  kubectl get pods -n integrationrt-0 -o wide
+  # -> take tech-adapters-5bdfb9865c-kfnws
+  kubectl exec -it tech-adapters-5bdfb9865c-kfnws -n integrationrt-0 -- cat /sys/class/net/eth0/iflink
+  # -> returns index
+  ssh -F /Users/ramgudla/.ssh/oc1_prod_config/PHX-DPG32-cell4 10.211.2.175
+  # <-> ssh to node
+  ip link | grep ^153:
+  # -> returns host side interface of the pod
+  sudo tcpdump -n -i veth55310ab1 host www.google.com
+
+Capturing in the container network namespace:
+  sudo docker inspect --format '{{ .State.Pid }}' k8s_nginx_my-nginx-b7d7bc74d-zxx28_default_ae4ee834-fb5d-4ec4-86b1-7834e538c666_0
+  sudo nsenter -t 17900 -n /bin/bash -xec 'ip a; tcpdump -i eth0 -s 0 -Xvv tcp port 80'
+
+  kubectl exec my-app-pod -c nginx -- tcpdump -i eth0 -w - | wireshark -k -i -
+
+How to execute a command inside a docker container's network namespace:
+  ## set up named network namespace
+  POD="my-pod"
+  NS_NAME="my-pod-nw-ns"
+  docker ps | grep $POD | awk '{ print $1 }'
+  cid=$(docker ps | grep $POD | awk '{ print $1 }')
+  ## host side process id
+  pid="$(docker inspect -f '{{.State.Pid}}' $cid)"
+  mkdir -p /var/run/netns
+  rm /var/run/netns/$NS_NAME 2>/dev/null
+  ## creating named network namespace
+  ln -s /proc/$pid/ns/net /var/run/netns/$NS_NAME
+  ## run commands inside network namespace
+  ip netns exec $NS_NAME hostname
+  ip netns exec $NS_NAME ip a
+  ip netns exec $NS_NAME sh -c 'echo "add your command here"'
+  ## TCP packet capture inside namespace
+  ip netns exec $NS_NAME tcpdump -i eth0 -n
+
+oci dns:
+  1. Networking -> DNS management -> Private views -> Private view (rgview) -> Priivate Zones -> Private Zone (rg.dev) -> myapigw.rg.dev A 10.0.1.185
+  2. Associate the private view (rgview) to the VCN DNS resolver.
+
+  A private DNS resolver handles DNS queries within your VCN based on private views and the private zones they contain.
+  A private DNS zone has similar capabilities to an internet DNS zone, but provides responses only for clients that can reach it through a VCN.
+  VCN creation includes a dedicated DNS resolver and a default private view with system-managed zones.
+  
+  A resolver provides responses by checking zones in your custom private views, then in its default view, then by checking rules, and finally by using internet DNS.
+  Private views contain Private zones. Private zones maintain DNS records.
+
+oic custom endpoint:
+https://docs.oracle.com/en/learn/oci-integration-waf/index.html#task-23-create-a-ssl-certificate-for-the-new-domain
+
+To create the self-signed certificate:
+  1.let’s first create a private key.
+  $ openssl genrsa -out oic-lab.key 2048
+  As a result you will get the private key named oic-lab.key.
+  
+  2. Now, let’s create the CSR (Certificate Signing Request).
+  $ openssl req -key oic-lab.key -new -out oic-lab.csr
+  Fill in the requested information to obtain your .csr file at the end.
+  
+  3. Now that we have the private key (oic-lab.key) and the csr (oic-lab.csr), let’s create the self-signed SSL certificate. To do this, run the command below.
+  $ openssl x509 -signkey oic-lab.key -in oic-lab.csr -req -days 365 -out oic-lab.crt
+  This command will generate a self-signed certificate valid for 365 days.
+
+21. openssl rsa cheat sheet:
+  # generate a private key with the correct length
+  openssl genrsa -out private-key.pem 3072
+  
+  # generate corresponding public key
+  openssl rsa -in private-key.pem -pubout -out public-key.pem
+  
+  # create a self-signed certificate
+  openssl req -new -x509 -key private-key.pem -out cert.pem -days 360
+  
+  # convert pem to pfx
+  openssl pkcs12 -export -out keystore.p12 -inkey private-key.pem -in cert.pem
+  
+  #convert p12 to jks
+  keytool -importkeystore -srckeystore keystore.p12 -destkeystore keystore.jks -srcstoretype pkcs12 -deststoretype jks -alias myalias
+
+curl tester:
+  for i in {1..100} ; do now=$(date +%Y-%m-%dT%H:%M:%S); curl -s -H “Host: <host>” -H ‘Cache-Control: no-cache’ --write-out ‘\nDNS: %{time_namelookup}\nTCPEstablished: %{time_connect}\nSSLEstablished: %{time_appconnect}\nFirstByteSent: %{time_pretransfer}\nRedirect: %{time_redirect}\nFirstByteReceived: %{time_starttransfer}\nTotal: %{time_total}\n\n’ -H “Content-Type: application/json” -o /dev/null <URL> --insecure; done
+  
+   hey tester:
+     https://github.com/rakyll/hey
+     https://medium.com/@willitheowl/dont-write-your-micronaut-http-controllers-without-this-critical-annotation-29506c98d29d
+
+tcp port forwarding:
+  sudo yum install socat
+  socat:
+    https://copyconstruct.medium.com/socat-29453e9fc8a6
+    https://fossies.org/linux/socat/EXAMPLES
+  socat tcp-listen:8001,reuseaddr,fork tcp:localhost:8000
+  socat TCP-LISTEN:8080,fork,reuseaddr TCP:google.com:443
+  socat TCP-LISTEN:443,fork,reuseaddr TCP:oic-dse-01.subnet1ad1mum.devintegra02bom.oraclevcn.com:443
+  socat tcp-listen:8001,reuseaddr,fork tcp:oicdsedev-ax4la6ordvex-px.integration.us-phoenix-1.ocp.oraclecloud.com:443 &
+  https://oicdsedev-ax4la6ordvex-px.integration.us-phoenix-1.ocp.oraclecloud.com/ic/api/integration/v1/flows/rest/TESTFTP/1.0/test
+
+open local firewall:
+  sudo firewall-cmd --zone=public --permanent --add-port=8081/tcp
+  sudo firewall-cmd --reload
+
+webserver:
+while true; do cat response.json | nc -l 8000; done &
+
+$ vi response.json
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=UTF-8
+Server: netcat!
+
+{"msg":"Hello, Rama!"}
+
+WaitInMilliSeconds.js:
+function sleep(milliseconds) {
+  var returnMsg="";
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      returnMsg = milliseconds;
+      break;
+    }
+  }
+  return returnMsg
+}
+
+db query execution time:
+  set timing on;
+  select count(*) from ABCD;
+  set timing off;
+
+By adding "X-envoy-* headers you can instruct Envoy about the retry strategy for a specific request:
+  curl -H "X-envoy-retriable-status-codes: 501" -H "x-envoy-max-retries: 2"  httpbin.default:8000/status/501 -v
+
+keytool commands:
+  https://www.sslshopper.com/article-most-common-java-keytool-keystore-commands.html
+  Alias Name Change from 1 to grabcad:
+    keytool -changealias -alias 1 -destalias grabcad -keystore /home/oraoic/agenthome/agent/tst/mis-client-staging.p12 -storetype PKCS12 -v
+  Change of p12 to jks format.
+    keytool -importkeystore -srckeystore ./mis-client-staging.p12 -srcstoretype pkcs12 -destkeystore ./mis-client-staging.jks -deststoretype jks -deststorepass Test@123
+    keytool -importkeystore  -srckeystore icumed-sbx1.cloud.modeln.com.p12 -destkeystore icumed-sbx1.cloud.modeln.com.jks -srcstoretype PKCS12 -deststoretype jks -srcstorepass eNXlrGyE8j -deststorepass modeln -srcalias icumed-sbx1.cloud.modeln.com -destalias modelnsbx -srckeypass eNXlrGyE8j -destkeypass modeln
