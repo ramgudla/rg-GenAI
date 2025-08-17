@@ -1,8 +1,45 @@
-oke tcpdump:
+1. AI Agents & Automation:
+ ollama:
+    pull ollama model: ollama pull llama3.2
+    run ollama model : ollama run llama3.2
+    The default connection URL for Ollama is typically http://localhost:11434.
+ n8n:
+    docker volume create n8n_data
+    docker run -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n
+    to access ollama from within the n8n cluster, the connect url: http://host.docker.internal:11434
+
+2. venv — Creation of virtual environments
+ create a venv:
+    python -m venv my_env_name
+    python3 -m venv .venv
+ 
+ source the venv:
+    source my_env_name/bin/activate
+    source .venv/bin/activate
+ 
+ Install ipykernel within the activated virtual environment:
+ Install the ipykernel library into the virtual environment so we can make it available to Jupyter.
+    pip install ipykernel
+ 
+ Register the virtual environment as a Jupyter kernel:
+ Use the ipykernel library to install our virtual environment for use with Jupyter.
+    python -m ipykernel install --user --name .venv --display-name "My GENAI Workbench"
+ 
+ List Virtual Environmentsin Jupyter Notebook:
+    jupyter kernelspec list
+ 
+ Remove Virtual Environment from Jupyter Notebook:
+    jupyter kernelspec uninstall my_env_name
+
+ Conversion from .py to .ipynb and vice-versa:
+    pip install ipynb-py-convert
+    ipynb-py-convert your_script.py your_notebook.ipynb
+
+3. oke tcpdump:
   sudo tcpdump -n -i ens3 -A -s 0 -w /tmp/agen1.pcap 'host jcsdev.oracloud.caesars.com and (tcp port 80 or tcp port 443)' &
   sudo tcpdump -n -i ens3 -A -s 0 -w /tmp/agen1.pcap host 10.x.x.x &
   sudo tcpdump -ttttnnr /tmp/agen1.pcap
-
+  
   https://gist.github.com/r0mdau/93ec268ad1ffeeaf99d80eba9e9ea84d
   https://github.com/pgillich/kubeadm-vagrant/blob/master/Ubuntu/capture_pod.sh
   # find the kube node of the running pod, appear next to hostIP, and note containerID hash
@@ -20,7 +57,7 @@ oke tcpdump:
   
   # then GO tcpdump !
   sudo tcpdump -i interface
-
+  
   e.g.,
   kubectl get pods -n integrationrt-0 -o wide
   # -> take tech-adapters-5bdfb9865c-kfnws
@@ -32,13 +69,13 @@ oke tcpdump:
   # -> returns host side interface of the pod
   sudo tcpdump -n -i veth55310ab1 host www.google.com
 
-Capturing in the container network namespace:
+4. Capturing in the container network namespace:
   sudo docker inspect --format '{{ .State.Pid }}' k8s_nginx_my-nginx-b7d7bc74d-zxx28_default_ae4ee834-fb5d-4ec4-86b1-7834e538c666_0
   sudo nsenter -t 17900 -n /bin/bash -xec 'ip a; tcpdump -i eth0 -s 0 -Xvv tcp port 80'
 
   kubectl exec my-app-pod -c nginx -- tcpdump -i eth0 -w - | wireshark -k -i -
 
-How to execute a command inside a docker container's network namespace:
+5. How to execute a command inside a docker container's network namespace:
   ## set up named network namespace
   POD="my-pod"
   NS_NAME="my-pod-nw-ns"
@@ -57,7 +94,7 @@ How to execute a command inside a docker container's network namespace:
   ## TCP packet capture inside namespace
   ip netns exec $NS_NAME tcpdump -i eth0 -n
 
-oci dns:
+6. oci dns:
   1. Networking -> DNS management -> Private views -> Private view (rgview) -> Priivate Zones -> Private Zone (rg.dev) -> myapigw.rg.dev A 10.0.1.185
   2. Associate the private view (rgview) to the VCN DNS resolver.
 
@@ -71,7 +108,7 @@ oci dns:
 oic custom endpoint:
 https://docs.oracle.com/en/learn/oci-integration-waf/index.html#task-23-create-a-ssl-certificate-for-the-new-domain
 
-To create the self-signed certificate:
+7. To create the self-signed certificate:
   1.let’s first create a private key.
   $ openssl genrsa -out oic-lab.key 2048
   As a result you will get the private key named oic-lab.key.
@@ -84,7 +121,7 @@ To create the self-signed certificate:
   $ openssl x509 -signkey oic-lab.key -in oic-lab.csr -req -days 365 -out oic-lab.crt
   This command will generate a self-signed certificate valid for 365 days.
 
-21. openssl rsa cheat sheet:
+8. openssl rsa cheat sheet:
   # generate a private key with the correct length
   openssl genrsa -out private-key.pem 3072
   
@@ -100,14 +137,14 @@ To create the self-signed certificate:
   #convert p12 to jks
   keytool -importkeystore -srckeystore keystore.p12 -destkeystore keystore.jks -srcstoretype pkcs12 -deststoretype jks -alias myalias
 
-curl tester:
+9. curl tester:
   for i in {1..100} ; do now=$(date +%Y-%m-%dT%H:%M:%S); curl -s -H “Host: <host>” -H ‘Cache-Control: no-cache’ --write-out ‘\nDNS: %{time_namelookup}\nTCPEstablished: %{time_connect}\nSSLEstablished: %{time_appconnect}\nFirstByteSent: %{time_pretransfer}\nRedirect: %{time_redirect}\nFirstByteReceived: %{time_starttransfer}\nTotal: %{time_total}\n\n’ -H “Content-Type: application/json” -o /dev/null <URL> --insecure; done
   
    hey tester:
      https://github.com/rakyll/hey
      https://medium.com/@willitheowl/dont-write-your-micronaut-http-controllers-without-this-critical-annotation-29506c98d29d
 
-tcp port forwarding:
+10. tcp port forwarding:
   sudo yum install socat
   socat:
     https://copyconstruct.medium.com/socat-29453e9fc8a6
@@ -118,11 +155,11 @@ tcp port forwarding:
   socat tcp-listen:8001,reuseaddr,fork tcp:oicdsedev-ax4la6ordvex-px.integration.us-phoenix-1.ocp.oraclecloud.com:443 &
   https://oicdsedev-ax4la6ordvex-px.integration.us-phoenix-1.ocp.oraclecloud.com/ic/api/integration/v1/flows/rest/TESTFTP/1.0/test
 
-open local firewall:
+11. open local firewall:
   sudo firewall-cmd --zone=public --permanent --add-port=8081/tcp
   sudo firewall-cmd --reload
 
-webserver:
+12. webserver:
 while true; do cat response.json | nc -l 8000; done &
 
 $ vi response.json
@@ -132,7 +169,7 @@ Server: netcat!
 
 {"msg":"Hello, Rama!"}
 
-WaitInMilliSeconds.js:
+13. WaitInMilliSeconds.js:
 function sleep(milliseconds) {
   var returnMsg="";
   var start = new Date().getTime();
@@ -145,15 +182,15 @@ function sleep(milliseconds) {
   return returnMsg
 }
 
-db query execution time:
+14. db query execution time:
   set timing on;
   select count(*) from ABCD;
   set timing off;
 
-By adding "X-envoy-* headers you can instruct Envoy about the retry strategy for a specific request:
+15. By adding "X-envoy-* headers you can instruct Envoy about the retry strategy for a specific request:
   curl -H "X-envoy-retriable-status-codes: 501" -H "x-envoy-max-retries: 2"  httpbin.default:8000/status/501 -v
 
-keytool commands:
+16. keytool commands:
   https://www.sslshopper.com/article-most-common-java-keytool-keystore-commands.html
   Alias Name Change from 1 to grabcad:
     keytool -changealias -alias 1 -destalias grabcad -keystore /home/oraoic/agenthome/agent/tst/mis-client-staging.p12 -storetype PKCS12 -v
