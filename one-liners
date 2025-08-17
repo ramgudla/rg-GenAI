@@ -3,8 +3,8 @@ oke tcpdump:
   sudo tcpdump -n -i ens3 -A -s 0 -w /tmp/agen1.pcap host 10.x.x.x &
   sudo tcpdump -ttttnnr /tmp/agen1.pcap
 
-https://gist.github.com/r0mdau/93ec268ad1ffeeaf99d80eba9e9ea84d
-https://github.com/pgillich/kubeadm-vagrant/blob/master/Ubuntu/capture_pod.sh
+  https://gist.github.com/r0mdau/93ec268ad1ffeeaf99d80eba9e9ea84d
+  https://github.com/pgillich/kubeadm-vagrant/blob/master/Ubuntu/capture_pod.sh
   # find the kube node of the running pod, appear next to hostIP, and note containerID hash
   kubectl get pod mypod -o json
   # -> save hostIP
