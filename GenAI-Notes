@@ -338,3 +338,7 @@ https://medium.com/@anuragmishra_27746/building-multi-agents-supervisor-system-f
        
        Remove Virtual Environment from Jupyter Notebook:
               jupyter kernelspec uninstall my_env_name
+
+       Conversion from .py to .ipynb and vice-versa:
+              pip install ipynb-py-convert
+              ipynb-py-convert your_script.py your_notebook.ipynb
