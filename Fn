@@ -1,0 +1,20 @@
+FROM fnproject/fn-java-fdk-build:jdk17-1.0.177 as build-stage
+WORKDIR /function
+ENV MAVEN_OPTS -Dhttp.proxyHost= -Dhttp.proxyPort= -Dhttps.proxyHost= -Dhttps.proxyPort= -Dhttp.nonProxyHosts= -Dmaven.repo.local=/usr/share/maven/ref/repository
+ADD pom.xml /function/pom.xml
+RUN ["mvn", "package", "dependency:copy-dependencies", "-DincludeScope=runtime", "-DskipTests=true", "-Dmdep.prependGroupId=true", "-DoutputDirectory=target", "--fail-never"]
+ADD src /function/src
+RUN ["mvn", "package"]
+FROM fnproject/fn-java-fdk:jre17-1.0.177
+WORKDIR /function
+COPY --from=build-stage /function/target/*.jar /function/app/
+ENV FN_FORMAT http-stream
+CMD ["com.example.fn.HelloFunction::handleRequest"]
+
+# https://github.com/fnproject/fdk-java/blob/master/runtime/src/main/java/com/fnproject/fn/runtime/HTTPStreamCodec.java
+# https://gist.github.com/recursivecodes/0ceb5974153d2bacc2aa5cba4ba42961
+# https://superuser.com/questions/1411402/how-to-expose-linux-socket-file-from-docker-container-mysql-mariadb-etc-to
+# Mount the common functions folder from host to container, and then on your host the socket will be available as /fn/ocid1.fn.test:
+# docker run -v /fn:/fn -e FN_LISTENER='unix:/fn/ocid1.fn.test' testfn
+# docker run -it --privileged --pid=host debian nsenter -t 1 -m -u -n -i sh
+# curl -vvv --unix-socket /fn/ocid1.fn.test -H "Fn-Deadline: 2023-07-31T23:01:58Z"  -H "Fn-Call-Id: test" http://rg/call
