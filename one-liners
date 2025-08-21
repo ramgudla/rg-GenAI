@@ -7,6 +7,13 @@
     docker volume create n8n_data
     docker run -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n
     to access ollama from within the n8n cluster, the connect url: http://host.docker.internal:11434
+ llm command-line tool:
+    https://simonwillison.net/2024/Jun/17/cli-language-models/
+    brew install llm
+    llm 'five great names for a pet pelican'
+    llm install llm-ollama
+    ollama pull llama3.2:latest
+    llm -m llama3.2:latest 'What is the capital of India?'
 
 2. venv — Creation of virtual environments
  create a venv:
