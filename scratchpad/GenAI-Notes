@@ -49,7 +49,37 @@ Prompt Engineering vs Fine-tuning vs RAG
 Vector Embeddings:
 It transforms linguistic meaning into geometric relationships that can be measured and analyzed mathematically.
 
+A Brief Evolution of Prompting & Reasoning Frameworks
 
+Zero-Shot and Few-Shot Prompting
+The earliest breakthroughs in GPT-3 era (2020–2021) were surprisingly simple: you could type in a direct question (“What is the capital of France?”) and the model would answer. That was zero-shot prompting. Soon, researchers found that providing few-shot examples — demonstrating the desired pattern with a few sample Q&As in the prompt — improved results dramatically. This was the birth of “prompt engineering.”
+
+Chain-of-Thought (CoT)
+In 2022, a new technique took hold: Chain-of-Thought prompting. Adding a short instruction like “Let’s think step by step” encouraged models to expose intermediate reasoning instead of leaping straight to an answer. Performance on reasoning-heavy tasks like grade-school math and commonsense logic improved significantly. CoT was a turning point — it showed that LLMs could be nudged toward process transparency.
+
+Tree-of-Thoughts, ReAct, and Beyond
+Building on CoT, researchers proposed Tree-of-Thoughts (ToT), where multiple reasoning paths are explored in parallel before selecting the best one, and ReAct, which interleaved reasoning with external actions like tool use or API calls. These innovations pushed models beyond static prompting into interactive cognition.
+
+RAG — Retrieval-Augmented Generation
+Meanwhile, enterprises ran into a practical problem: LLMs hallucinated facts and lacked up-to-date knowledge. The solution was Retrieval-Augmented Generation (RAG), where models pull from external databases or search indexes before generating responses. RAG made LLMs useful in enterprise settings — answering questions with grounding in real documents.
+
+Deep Agents — The Hierarchy of Synthetic Cognition
+A Deep Agent, by contrast, is not just a loop but a hierarchical system of loops. It embodies three key traits:
+
+Recursion — Deep Agents can break down a task into sub-tasks, generate strategies for each, and recursively spawn sub-agents to handle them. For example, “research and draft a market analysis report” might become:
+
+Sub-agent A: gather market data.
+Sub-agent B: identify competitors.
+Sub-agent C: analyze trends.
+Supervisor agent: integrate findings, check consistency, and polish style.
+
+Hierarchy — Deep Agents are structured like an organization chart. Supervisory agents oversee worker agents. Some specialize in planning, others in execution, others in auditing. This mirrors human organizations, where managers delegate, auditors review, and teams specialize.
+
+Reflection — Deep Agents don’t just act; they evaluate their own performance. They may pause mid-task, critique their own output, and revise strategies. Reflection prevents them from blindly running down a wrong path.
+
+Together, recursion, hierarchy, and reflection transform an agent from a reactive tool into something closer to a synthetic organization — a cognitive system with structure, feedback loops, and internal governance.
+
+The prompt engineering era taught us to talk to AI. The context engineering era is teaching us to think with AI.
 
 . . .
 
@@ -88,6 +118,7 @@ Transformers
 
 4. https://ruslanmv.com/blog/Mathematics-of-a-Basic-Generative-Pretrained-Transformer
    https://medium.com/@kyeg/attention-mechanisms-simplified-using-einsum-in-pytorch-b99d3b4ef6f7
+   https://medium.com/@shravankoninti/build-a-small-language-model-slm-from-scratch-3ddd13fa6470
 
 5. https://jalammar.github.io/illustrated-transformer/
 
@@ -137,13 +168,6 @@ https://towardsdatascience.com/using-langchain-react-agents-for-answering-multi-
 https://medium.com/data-science/using-langchain-react-agents-for-answering-multi-hop-questions-in-rag-systems-893208c1847e
   https://github.com/V-Sher/LangChain_ReAct_Demo/tree/main
   https://airbyte.com/data-engineering-resources/using-langchain-react-agents
-https://confluence.oraclecorp.com/confluence/display/CCS/AI+Agent+-+Architecture
-https://confluence.oraclecorp.com/confluence/display/IBS/Agent-Oriented+Architecture+for+CAA
-https://confluence.oraclecorp.com/confluence/display/IBS/Agent-Oriented+Architecture+vs.+AI+Agentic+Patterns
-https://confluence.oraclecorp.com/confluence/pages/viewpage.action?pageId=9930556902
-
-https://atom-vb-idb6enfdcxbl.builder.us-chicago-1.ocp.oraclecloud.com/ic/builder/rt/ATOM_ODA/live/webApps/atom/
-https://confluence.oraclecorp.com/confluence/pages/viewpage.action?pageId=10106151216
 
 https://medium.com/data-science-collective/langgraph-mcp-ollama-the-key-to-powerful-agentic-ai-e1881f43cf63
   https://www.youtube.com/watch?v=Iy1yF_SAmUY&t=317s
@@ -213,6 +237,9 @@ Run Oracle Database 23ai locally
 ================================
 https://ronekins.com/2024/07/02/run-oracle-database-23ai-free-on-mac-computers-with-apple-silicon/
 
+https://medium.com/@karthikn.js/oracle23ai-databasevector-search-integration-with-langchain-01dddfbfa1ea
+https://medium.com/@karthikn.js/oracle23ai-database-vector-search-integration-with-langchain-part-2-668445b51996
+
 docker run -d \
   --name ora23ai \
   -p 1521:1521 \
@@ -260,7 +287,7 @@ https://www.udemy.com/course/mathematics-behind-large-language-models-and-transf
 https://ruslanmv.com/blog/AI-Medical-Chatbot
 https://ruslanmv.com/blog/ArXiv-Research-with-Artificial-Intelligence
 
-Quote:
+Nice Quote:
 Agents are tools meant to assist, and the role of human engineers will continue to evolve as AI takes on more responsibilities.
 
 multi-agent:
@@ -298,6 +325,82 @@ Knowledge Graph Pipeline:
 https://levelup.gitconnected.com/converting-unstructured-data-into-a-knowledge-graph-using-an-end-to-end-pipeline-552a508045f9
   https://github.com/FareedKhan-dev/KG-Pipeline
 
-Multi-Agents:
+Multi-Agents AI System:
 https://medium.com/@anuragmishra_27746/building-multi-agents-supervisor-system-from-scratch-with-langgraph-langsmith-b602e8c2c95d
   https://github.com/anurag-mishra899/Multi-Agents-Appointment-Booking
+
+https://levelup.gitconnected.com/building-a-multi-agent-ai-system-with-langgraph-and-langsmith-6cb70487cd81
+  https://github.com/FareedKhan-dev/Multi-Agent-AI-System/tree/main
+
+SAP:
+https://community.sap.com/t5/technology-blog-posts-by-sap/the-power-of-ai-agents-my-journey-with-langgraph/ba-p/14032724
+
+Bushfire Plan Generator
+https://github.com/MartinHodges/bushfire-survival-plan/tree/main
+
+n8n:
+https://www.getpassionfruit.com/blog/the-ultimate-beginner-s-guide-to-n8n-ai-workflows-and-ai-agents
+https://www.youtube.com/watch?v=msjDe6YQ5BQ
+
+AI Agents & Automation:
+   ollama:
+      pull ollama model: ollama pull llama3.2
+      run ollama model : ollama run llama3.2
+      The default connection URL for Ollama is typically http://localhost:11434.
+   n8n:
+      docker volume create n8n_data
+      docker run -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n
+      to access ollama from within the n8n cluster, the connect url: http://host.docker.internal:11434
+   llm command-line tool:
+     https://simonwillison.net/2024/Jun/17/cli-language-models/
+     https://medium.com/@billcava/terminal-ai-how-llm-changed-my-workflow-71ef97ddab5b
+     https://souvikmajumder31.medium.com/cline-cli-and-the-rise-of-the-autonomous-platform-engineer-5d86486eda7c
+     brew install llm
+     llm models list
+     llm models default gpt-4.1-mini
+     llm install llm-ollama
+     ollama pull llama3.2:latest
+     llm -m llama3.2:latest 'What is the capital of India?'
+   Cline CLI:
+   copy mcp settings : ~/.cline/data/settings/cline_mcp_settings.json
+   start an instance : cline instance new
+   run a workflow    : cline task new --yolo "Run the jira-sd-analysis.md CDA-27479"
+   follow a tasks    : cline task view --follow
+   list instances    : cline instance list
+   kill all instances: cline instance kill -a
+
+langgraph supervisor pattern:
+  https://langchain-ai.github.io/langgraph/tutorials/multi_agent/agent_supervisor/#2-create-supervisor-with-langgraph-supervisor
+  https://langchain-ai.github.io/langgraph/how-tos/create-react-agent-manage-message-history/
+
+  https://levelup.gitconnected.com/how-to-build-a-multi-agent-supervisor-system-with-langgraph-qwen-streamlit-2aabed617468
+  https://github.com/Mercytopsy/AI-Health-Supervisor-Agent
+  prompt: can you provide me full body without routine and stress reducing tips
+
+  Build a Multi-Agent System with LangGraph (try this):
+    https://blog.futuresmart.ai/multi-agent-system-with-langgraph
+    https://medium.com/my-aiml/why-langgraph-langchain-run-better-on-oci-b30037fe62e5
+    https://codecut.ai/building-multi-agent-ai-langgraph-tutorial/ (imp)
+      https://github.com/CodeCutTech/langraph-demo/tree/main
+    https://codecut.ai/langchain-1-0-middleware-production-agents/
+      https://github.com/CodeCutTech/Data-science/blob/master/llm/langchain_1.0_middleware.ipynb
+    https://dev.to/samadhi_patil_294a4ff7fea/building-advanced-ai-agents-with-langchains-deepagents-a-hands-on-guide-1bk4
+      https://github.com/Marktechpost/AI-Tutorial-Codes-Included/blob/main/AI%20Agents%20Codes/Langchain_Deepagents.ipynb
+    https://medium.com/@praveencs87/deep-agents-from-scratch-building-advanced-ai-agents-with-langchain-9d918451abcd (imp)
+      https://github.com/langchain-ai/deep-agents-from-scratch/blob/main/notebooks/4_full_agent.ipynb
+
+    deepagents:
+      https://www.datacamp.com/tutorial/deep-agents
+      https://medium.com/data-science-collective/deep-agents-and-high-order-prompts-hops-the-next-substrate-of-ai-reasoning-562c19aa25f6
+
+    context engineering:
+      https://www.promptingguide.ai/guides/context-engineering-guide
+        https://simple.ai/p/the-skill-thats-replacing-prompt-engineering?
+        https://rlancemartin.github.io/2025/06/23/context_engineering/
+        https://github.com/humanlayer/12-factor-agents
+
+  How to Build a Voice AI Agent Using Open-Source Tools:
+    https://www.freecodecamp.org/news/how-to-build-a-voice-ai-agent-using-open-source-tools/
+
+  Building a Temporal AI Agent to Optimize Evolving Knowledge Bases in Modern RAG Systems:
+    https://levelup.gitconnected.com/building-a-temporal-ai-agent-to-optimize-evolving-knowledge-bases-in-modern-rag-systems-a299a53bef9a
